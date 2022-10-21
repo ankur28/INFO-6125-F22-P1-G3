@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  WordleGame
 //
-//  Created by Akash Cb on 2022-10-20.
+//  Created by Ankur Kalson on 2022-10-18.
 //
 
 import UIKit
