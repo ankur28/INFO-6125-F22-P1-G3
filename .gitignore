@@ -4,3 +4,4 @@ WordleGame.xcodeproj/project.xcworkspace/xcuserdata/akashcb.xcuserdatad/UserInte
 *.xcuserstate
 project.xcworkspace/
 xcuserdata/
+**/.DS_Store
