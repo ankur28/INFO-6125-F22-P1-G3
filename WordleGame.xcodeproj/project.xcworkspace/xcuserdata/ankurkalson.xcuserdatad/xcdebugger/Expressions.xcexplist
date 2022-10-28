@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "ViewController.changeColorToGray(textVal:slicedArr:):ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "slicedArr[i].text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ViewController.disableKeyboard():ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = " button?.tag ">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ViewController.submitAction(_:):ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "guess[j]">
+            </PersistentString>
+            <PersistentString
+               value = "guess[i]">
+            </PersistentString>
+            <PersistentString
+               value = "randowWordArr[i]">
+            </PersistentString>
+            <PersistentString
+               value = "randowWordArr.contains(guess[i])">
+            </PersistentString>
+            <PersistentString
+               value = "randowWordArr.contains(guess[j])  ">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ViewController.showValInColumn(keyVal:):ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "textFieldArr[index].tag ">
+            </PersistentString>
+            <PersistentString
+               value = "textFieldArr[index].text == &quot;&quot;">
+            </PersistentString>
+            <PersistentString
+               value = "getSplicedArr()[index].tag">
+            </PersistentString>
+            <PersistentString
+               value = "turns">
+            </PersistentString>
+            <PersistentString
+               value = "textFieldArr[index].tag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ViewController.isWordReal(word:):ViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "static AppDelegate.$main():AppDelegate.swift">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
