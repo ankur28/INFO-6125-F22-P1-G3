@@ -59,24 +59,58 @@ class ViewController: UIViewController {
         print("randowm: ",randowWordArr)
         print(guess)
         
+        let greenColor = UIColor(red: 83.0/255, green: 141.0/255, blue: 78.0/255, alpha: 1.0)
+        let yellowColor = UIColor(red: 180.0/255, green: 159.0/255, blue: 58.0/255, alpha: 1.0)
+        let grayColor = UIColor(red: 58.0/255, green: 58.0/255, blue: 60.0/255, alpha: 1.0)
+        
+        //checking duplicates
+        let randomWordHasDuplicates = randowWordArr.count != Set(randowWordArr).count
+        let guessHasDuplicates = guess.count != Set(guess).count
+
+        
         for i in 0...randowWordArr.count - 1 {
             if (randowWordArr.contains(guess[i]) && randowWordArr[i] == guess[i]){
-                changeColorToGreen(textVal: guess[i],slicedArr: getSplicedArr())
+                
+                changeTextFieldColor(textVal: guess[i],splicedArr: getSplicedArr(index: i),color: greenColor)
+                
+                changeKeyColor(textVal: guess[i],color: greenColor)
             }
             else if (randowWordArr.contains(guess[i]) && randowWordArr[i] != guess[i]){
-                changeColorToYellow(textVal: guess[i],slicedArr: getSplicedArr())
-
-            } else {
-                changeColorToGray(textVal: guess[i],slicedArr: getSplicedArr())
-            
-
+                changeTextFieldColor(textVal: guess[i],splicedArr: getSplicedArr(index: i),color: yellowColor)
+                changeKeyColor(textVal: guess[i],color:yellowColor)
+            }
+            else {
+                changeTextFieldColor(textVal: guess[i],splicedArr: getSplicedArr(index: i),color: grayColor)
+                changeKeyColor(textVal: guess[i],color: grayColor)
+                
             }
         }
-        
+            
+            // check for duplicates
+        var flag = 1
+            if(!randomWordHasDuplicates && guessHasDuplicates){
+                for j in 0...guess.count - 1 {
+                    for k in 1...guess.count - 1 {
+                        if flag == 5{
+                            break
+                        }
+                            
+                        if guess[j] == guess[flag] {
+                            //check the colors of the textfield, if both yellow turn the second one gray
+                            if(getSplicedArr(index: 0)[j].backgroundColor == greenColor){
+                                getSplicedArr(index: 0)[k].backgroundColor = grayColor
+                            }
+                        }
+                        flag += 1
+                    }
+                }
+            }
+           
         if(randomWord == String(guess)){
             let okAction = UIAlertAction(title: "Play Again", style: .default){
                 action in print("OK Clikced!!!")
                 self.resetBoard()
+                self.resetKeyboard()
             }
             let alert = UIAlertController(title: "WOOHOO!", message: "You Got The Word!", preferredStyle: .alert)
             alert.addAction(okAction)
@@ -90,6 +124,7 @@ class ViewController: UIViewController {
             let okAction = UIAlertAction(title: "Play Again", style: .default){
                 action in print("OK Clikced!!!")
                 self.resetBoard()
+                self.resetKeyboard()
             }
             let alert = UIAlertController(title: "You ran out of luck!", message: "Word was \(randomWord)", preferredStyle: .alert)
             alert.addAction(okAction)
@@ -107,9 +142,11 @@ class ViewController: UIViewController {
     }
     
     @IBAction func deleteAction(_ sender: Any) {
-        for i in (0...getSplicedArr().count - 1).reversed() {
-            if (getSplicedArr()[i].text != ""){
-                getSplicedArr()[i].text = ""
+        let arr = getSplicedArr(index: 0)
+
+        for i in (0...arr.count - 1).reversed() {
+            if (arr[i].text != ""){
+                arr[i].text = ""
                 guess.remove(at: i)
                 break
             }
@@ -118,46 +155,50 @@ class ViewController: UIViewController {
     }
     
     
-    func changeColorToGreen(textVal: Character,slicedArr: Array<UITextField>){
-        for i in 0...slicedArr.count - 1{
-            if slicedArr[i].text == String(textVal) {
-                slicedArr[i].backgroundColor = UIColor(red: 83.0/255, green: 141.0/255, blue: 78.0/255, alpha: 1.0)
-                
+    func changeTextFieldColor(textVal: Character,splicedArr: Array<UITextField>,color: UIColor){
+        for i in 0...splicedArr.count - 1{
+            if splicedArr[i].text == String(textVal) {
+                splicedArr[i].backgroundColor = color
             }
         }
     }
- func changeColorToYellow(textVal: Character,slicedArr: Array<UITextField>){
-        for i in 0...slicedArr.count - 1{
-            if slicedArr[i].text == String(textVal) {
-                slicedArr[i].backgroundColor = UIColor(red: 180.0/255, green: 159.0/255, blue: 58.0/255, alpha: 1.0)
-            }
-        }
-    }
-    func changeColorToGray(textVal: Character,slicedArr: Array<UITextField>){
-        for i in 0...slicedArr.count - 1{
-            if slicedArr[i].text == String(textVal) {
-                slicedArr[i].backgroundColor = UIColor(red: 58.0/255, green: 58.0/255, blue: 60.0/255, alpha: 1.0)
-                slicedArr[i].textColor = UIColor.white
+
+    func changeKeyColor(textVal: Character, color: UIColor){
+        for view in  keyboardView.subviews {
+            if let row = view as? UIStackView{
+                for subview in row.subviews {
+                    let button = subview as? UIButton
+                    if let btnText = button?.titleLabel?.text {
+                        if(btnText == String(textVal)){
+                            button?.backgroundColor = color
+                        }
+                    }
+                }
             }
         }
     }
     
+    
     func showValInColumn(keyVal: Character)  {
-        for  index in 0...getSplicedArr().count - 1{
+        let arr = getSplicedArr(index: 0)
+        for  index in 0...arr.count - 1 {
            
-            if(getSplicedArr()[index].tag == 5 || getSplicedArr()[index].tag == 10 || getSplicedArr()[index].tag == 15 ||  getSplicedArr()[index].tag == 20 || getSplicedArr()[index].tag == 25 || getSplicedArr()[index].tag == 30){
-                submitBtn.isEnabled = true
-            }
+          
             //insert val in 1st column
-            if(getSplicedArr()[index].text == "" && index == 0){
-                getSplicedArr()[index].text = String(keyVal)
+            if(arr[index].text == "" && index == 0){
+                arr[index].text = String(keyVal)
                 guess.append(keyVal)
                 break
             }
             //insert val in next col
-            if (getSplicedArr()[index].text == "" && getSplicedArr()[index - 1].text != ""){
-                getSplicedArr()[index].text = String(keyVal)
+            if (arr[index].text == "" && arr[index - 1].text != ""){
+                arr[index].text = String(keyVal)
                 guess.append(keyVal)
+                if(arr[index].tag == 5 || arr[index].tag == 10 || arr[index].tag == 15 ||  arr[index].tag == 20 || arr[index].tag == 25 || arr[index].tag == 30){
+                    print(String(guess), isWordReal(word: String(guess)))
+
+                        submitBtn.isEnabled = true
+                }
                 break
             }
           
@@ -176,28 +217,55 @@ class ViewController: UIViewController {
             }
         }
     
-    func getSplicedArr() -> Array<UITextField>{
-        if(turns == 2){
-           return Array(textFieldArr[5...9])
+    func disableKeyboard (){
+        for view in  keyboardView.subviews {
+            if let row = view as? UIStackView{
+                for subview in row.subviews {
+                    let button = subview as? UIButton
+                    //28 tag is for submit button
+                    if ( button?.tag != 28 && button?.tag != 27) {
+                        button?.isEnabled = false
+                        }
+                    }
+                }
+            }
+            submitBtn.isEnabled = true
+
+
+    }
+
+  
+
+//tried adding the word spell check but always gives true for all the words
+    func isWordReal(word: String) -> Bool {
+        let word_lowercase = word.lowercased()
+
+        let checker = UITextChecker()
+          let range = NSRange(location: 0, length: word_lowercase.utf16.count)
+          let mispelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
+
+          return mispelledRange.location == NSNotFound
+        
+    }
+    
+    func getSplicedArr(index: Int) -> Array<UITextField>{
+        if(turns == 1){
+            return Array(textFieldArr[index...4])
+        }
+        else if ( turns == 2 ){
+            return Array(textFieldArr[(index + 5)...9])
         }
         else if ( turns == 3 ){
-            return Array(textFieldArr[10...14])
-
+            return Array(textFieldArr[(index + 10)...14])
         }
         else if ( turns == 4 ){
-            return Array(textFieldArr[15...19])
-
+            return Array(textFieldArr[(index + 15)...19])
         }
         else if ( turns == 5 ){
-            return Array(textFieldArr[20...24])
-
-        }
-        else if ( turns == 6 ){
-            return Array(textFieldArr[25...29])
-
+            return Array(textFieldArr[(index + 20)...24])
         }
         else{
-            return Array(textFieldArr[0...4])
+            return Array(textFieldArr[(index + 25)...29])
         }
     }
     
@@ -213,10 +281,27 @@ class ViewController: UIViewController {
             }
         }
     }
-        
+    
+    func resetKeyboard(){
+        for view in  keyboardView.subviews {
+            if let row = view as? UIStackView{
+                for subview in row.subviews {
+                    let button = subview as? UIButton
+                        if ( button?.tag != 28 && button?.tag != 27) {
+                            button?.backgroundColor = UIColor(red: 128.0/255, green: 131.0/255, blue: 132.0/255, alpha: 1.0)
+                        }
+                    }
+                }
+        }
+    }
+    
     func getRandomWord() -> String {
         let wordArr = ["HOUSE","BEARS","TRACE","BLUES","SWIFT","CRACK","HONEY","ALONG","SHINE","SHARP","EARTH"]
+        
+//        let wordArr = ["CRACK"]
         return wordArr.randomElement()!
+        
     }
     
 }
+
